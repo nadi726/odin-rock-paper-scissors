@@ -15,18 +15,14 @@ function getComputerChoice() {
 }
 
 function getHumanChoice() {
-    let input = prompt("Do you choose rock, paper or scissors? (1-3)");
+    let input = prompt("Do you choose rock, paper or scissors?");
     let choice;
     
-    switch(input) {
-        case "1":
-            choice = "rock";
-            break;
-        case "2":
-            choice = "paper";
-            break;
-        case "3":
-            choice = "scissors";
+    switch(input.toLowerCase()) {
+        case "rock":
+        case "paper":
+        case "scissors":
+            choice = input;
             break;
         default:
             choice = null;
