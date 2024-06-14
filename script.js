@@ -1,7 +1,3 @@
-let humanScore = 0;
-let computerScore = 0;
-
-
 function getComputerChoice() {
     const choiceNum = Math.random() * 100 + 1
 
@@ -92,3 +88,49 @@ function getRoundMessage(winnerInt) {
             return "It's a tie!";
     }
 }
+
+
+function playGame() {
+    let humanScore = 0;
+    let computerScore = 0;
+    
+    function playRound(humanChoice, computerChoice) {
+        // Proceed only for valid values
+        if (!humanChoice) {
+            console.log("Oops! something went wrong...")
+            return;
+        }
+    
+        let winnerInt = getWinner(humanChoice, computerChoice);
+        
+        let msg = getRoundMessage(winnerInt);
+        console.log("You chose " + humanChoice);
+        console.log("The computer chose " + computerChoice);
+        console.log(msg);
+        
+        if (winnerInt === 1) {
+            humanScore++;
+        } else if (winnerInt === -1) {
+            computerScore++;
+        }
+    }
+
+    // Play 5 times
+    for (let i = 0; i < 5; i++) {
+        playRound(getHumanChoice(), getComputerChoice());
+        console.log();
+    }
+
+    console.log("\nYour score is:" + humanScore);
+    console.log("The computer's score is: " + computerScore);
+
+    if (humanScore > computerScore) {
+        console.log("You won the game! Congratulations!");
+    } else if (computerScore > humanScore) {
+        console.log("You lost! better luck next time...");
+    } else {
+        console.log("It's a tie! Wow, that's kinda rare")
+    }
+}
+
+playGame()
