@@ -1,3 +1,9 @@
+let humanScore = 0;
+let computerScore = 0;
+let rounds = 0;
+const WIN_SCORE = 5;
+
+
 function getComputerChoice() {
     const choiceNum = Math.random() * 100 + 1
 
@@ -10,42 +16,35 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let input = prompt("Do you choose rock, paper or scissors?");
-    let choice;
-    
-    switch(input.toLowerCase()) {
-        case "rock":
-        case "paper":
-        case "scissors":
-            choice = input;
-            break;
-        default:
-            choice = null;
-    }
+function setDisplay(msg) {
+    let displayDiv = document.querySelector("#display");
+    let scoreText = `\nComputer: ${computerScore}, Player: ${humanScore}\nRound: ${rounds}`
+    displayDiv.textContent = msg + scoreText;
 
-    return choice;
 }
 
-function playRound(humanChoice, computerChoice) {
+function playRound(humanChoice) {
+    humanChoice = humanChoice.toLowerCase()
     // Proceed only for valid values
     if (!humanChoice) {
         console.log("Oops! something went wrong...")
         return;
     }
 
+    let computerChoice = getComputerChoice();
     let winnerInt = getWinner(humanChoice, computerChoice);
     
-    let msg = getRoundMessage(winnerInt);
-    console.log("You chose " + humanChoice);
-    console.log("The computer chose " + computerChoice);
-    console.log(msg);
-    
+    rounds++;
     if (winnerInt === 1) {
         humanScore++;
     } else if (winnerInt === -1) {
         computerScore++;
     }
+
+    let msg = "You chose " + humanChoice;
+    msg += "\nThe computer chose " + computerChoice;
+    msg += "\n" + getRoundMessage(winnerInt);
+    setDisplay(msg);
 }
 
 
@@ -90,47 +89,32 @@ function getRoundMessage(winnerInt) {
 }
 
 
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
+function onClick(e) {
+    playRound(e.target.textContent)
     
-    function playRound(humanChoice, computerChoice) {
-        // Proceed only for valid values
-        if (!humanChoice) {
-            console.log("Oops! something went wrong...")
-            return;
-        }
-    
-        let winnerInt = getWinner(humanChoice, computerChoice);
-        
-        let msg = getRoundMessage(winnerInt);
-        console.log("You chose " + humanChoice);
-        console.log("The computer chose " + computerChoice);
-        console.log(msg);
-        
-        if (winnerInt === 1) {
-            humanScore++;
-        } else if (winnerInt === -1) {
-            computerScore++;
-        }
-    }
-
-    // Play 5 times
-    for (let i = 0; i < 5; i++) {
-        playRound(getHumanChoice(), getComputerChoice());
-        console.log();
-    }
-
-    console.log("\nYour score is:" + humanScore);
-    console.log("The computer's score is: " + computerScore);
-
-    if (humanScore > computerScore) {
-        console.log("You won the game! Congratulations!");
-    } else if (computerScore > humanScore) {
-        console.log("You lost! better luck next time...");
-    } else {
-        console.log("It's a tie! Wow, that's kinda rare")
+    if (humanScore == WIN_SCORE || computerScore == WIN_SCORE) {
+        onGameEnd()
     }
 }
 
-playGame()
+function onGameEnd() {
+    let msg = "Game ended!"
+    if (humanScore > computerScore) {
+        msg += "\nYou won the game! Congratulations!";
+    } else if (computerScore > humanScore) {
+        msg += "\nYou lost! better luck next time...";
+    } else {
+        msg += "\nIt's a tie! Wow, that's kinda rare";
+    }
+    setDisplay(msg);
+
+    rounds = 0;
+    humanScore = 0;
+    computerScore = 0;
+}
+
+
+buttons = document.querySelectorAll("#buttons > button");
+buttons.forEach(element => {
+    element.addEventListener("click", onClick)
+});
